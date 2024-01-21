@@ -12,7 +12,6 @@ app.logger.setLevel(logging.INFO)
 
 # Configure the SQLAlchemy part
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///symptom.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///backup_symptom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -30,15 +29,6 @@ class Symptom(db.Model):
     def __repr__(self):
         return f'<Symptom {self.id} - {self.timestamp}>'
     
-class BackupSymptom(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    description = db.Column(db.String(500), nullable=False)
-    recommendation = db.Column(db.String(500))
-
-    def __repr__(self):
-        return f'<BackupSymptom {self.id} - {self.timestamp}>'
-
 with app.app_context():
     db.create_all()
 
@@ -80,12 +70,9 @@ def submit():
         app.logger.info(f"User IP: {user_ip}, Symptoms: {symptoms_description}")
         # Create a new Symptom instance
         new_symptom = Symptom(description=symptoms_description)
-        # Create a new BackupSymptom instance with the same data
-        backup_symptom = BackupSymptom(description=symptoms_description)
         # Add and commit both instances to their respective databases
         db.session.add(new_symptom)
-        db.session.add(backup_symptom)
-
+        
         # Start a background thread to fetch the recommendation
         recommendation_thread = threading.Thread(target=fetch_recommendation, args=(symptoms_description,))
         recommendation_thread.start()
@@ -99,7 +86,6 @@ def submit():
             recommendation = "Recommendation not available at the moment."
 
         new_symptom.recommendation = recommendation
-        backup_symptom.recommendation = recommendation
 
         db.session.commit()
 
