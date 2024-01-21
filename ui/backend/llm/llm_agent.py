@@ -6,11 +6,8 @@ load_dotenv()
 
 class Conversation:
     def __init__(self, system_prompt):
-        
         self.client = openai.OpenAI(api_key = os.getenv("OPENAI_API_KEY"),) 
-        self.messages = [
-            {'role': 'system', 'content': system_prompt},
-            ]
+        self.system_prompt = system_prompt
 
     def example(self):
 
@@ -22,7 +19,6 @@ class Conversation:
             {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
         ]
         )
-
         print(completion.choices[0].message)
 
         # Example usage
@@ -42,19 +38,15 @@ class Conversation:
             return ""
 
     def rolling_convo(self, user_input, found_db_texts):
+        self.messages = [
+            {'role': 'system', 'content': self.system_prompt},
+            ]
         self.messages.append({"role": "user", "content": user_input})
 
         if found_db_texts:
-            found_db_texts_encoded = found_db_texts.replace('\u2019','')
-            self.messages.append({"role": "system", "content": found_db_texts_encoded})
+            self.messages.append({"role": "system", "content": found_db_texts})
 
         chat_response = self.call_api(self.messages)
-
-        # Remove the last system message if it was added
-        if self.messages[-1]["role"] == "system":
-            self.messages.pop()
-
-        self.messages.append({"role": "assistant", "content": chat_response})
 
         return chat_response
 

@@ -6,7 +6,7 @@ import os
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 DATA_PATH=['./datasets/tea.json','./datasets/ju_hackathon_train_data.json']
-SYSTEM_DEFAULT_PROMPT = '根据病患的个人信息，如年龄，性别，工作，以及提供的病情描述，做出专业的中医诊断并且开出治疗方案和治疗处方，写出【按语】做出解释。最后从tea.json数据库中搜索出最符合的茶饮，写出【茶饮】返回茶饮药名，编号，功效，组成，适应症，按语，方源，和制作方法'
+SYSTEM_DEFAULT_PROMPT = '做出专业的中医诊断，写出【按语】做出解释。根据查找出的相近病案和茶饮数据，写出【茶饮】返回茶饮药名，编号，功效，组成，适应症，按语，方源，和制作方法'
 
 class Korok:
     def __init__(self, system_prompt=SYSTEM_DEFAULT_PROMPT, threshold=0.6, top_n=3, db_paths =DATA_PATH, update_db=False) -> None:
@@ -26,11 +26,11 @@ class Korok:
 
         loc1_found_db_texts, scores = self.custom_system_prompt(user_input)
 
-        local_db_text = ""
+        local_db_text = "查找出的相近病案和茶饮数据："
         for x in loc1_found_db_texts:
             local_db_text += x
  
-        print(f"{local_db_text.encode('utf-8')}\n\n======found vector above database=======\n")
+        print(f"查找出的相近病案和茶饮数据：{local_db_text.encode('utf-8')} ")
         print(f"Score: {scores}") 
         
         output = self.convo.rolling_convo(user_input, local_db_text)

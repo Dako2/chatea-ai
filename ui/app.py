@@ -5,7 +5,7 @@ import logging
 import threading
 import chatea_korok
 
-korok = chatea_korok.Korok(threshold=0.6,top_n=3)
+korok = chatea_korok.Korok(threshold=0.6,top_n=1)
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
@@ -13,7 +13,6 @@ app.logger.setLevel(logging.INFO)
 # Configure the SQLAlchemy part
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///symptom.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///backup_symptom.db'
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
