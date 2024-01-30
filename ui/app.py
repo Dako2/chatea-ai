@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import logging
 import threading
-import chatea_korok
+import backend.chatea_korok as chatea_korok
 
 korok = chatea_korok.Korok(threshold=0.6,top_n=1)
 
@@ -40,13 +40,11 @@ def home():
 def fetch_recommendation(symptoms_description):
 
     # Make an API request to the third-party service
+    cost = 0
     try:
         #messages = core.recommend(symptoms_description)
-        recommendation = korok.chat_api_v2(symptoms_description)
-        print(recommendation)
-        #recommendation = ""
-        #for m in messages:
-        #    recommendation += f"{m.content[0].text.value}"
+        recommendation, cost = korok.chat_api_v2(symptoms_description)
+        print(recommendation, cost)
     except:
         recommendation = "Recommendation not available at the moment."
 
@@ -141,4 +139,4 @@ def teardown_server(exception=None):
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=4000)

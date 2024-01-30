@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchUsageCount();
 
     // Periodically update the count (e.g., every minute)
-    setInterval(fetchUsageCount, 60000); // 60000 milliseconds = 1 minute
+    //setInterval(fetchUsageCount, 60000); // 60000 milliseconds = 1 minute
 
     // Handle the tea recommendation form submission
     document.getElementById('tea-form').addEventListener('submit', function(event) {
@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    
     function attachEventListenersToListItems() {
         document.querySelectorAll('.thumb-up').forEach(button => {
             button.addEventListener('click', function(event) {

@@ -1,6 +1,16 @@
 import glob
 import pandas as pd
 import json
+import tiktoken
+def num_tokens_from_string(string: str, encoding_name: str) -> int:
+    """Returns the number of tokens in a text string."""
+    encoding = tiktoken.get_encoding(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
+    
+encoding = tiktoken.get_encoding("cl100k_base")
+encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+encoding.encode("tiktoken is great!")
 
 # Get a list of CSV file paths
 fns = glob.glob("*.csv")
